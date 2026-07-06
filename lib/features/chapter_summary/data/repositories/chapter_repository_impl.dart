@@ -24,6 +24,9 @@ class ChapterRepositoryImpl implements ChapterRepository {
       markdownContent: markdown,
       accentColor: meta.accentColor,
       iconData: meta.iconData,
+      summary: meta.summary,
+      steps: meta.steps,
+      coreInsight: meta.coreInsight,
     );
   }
 }

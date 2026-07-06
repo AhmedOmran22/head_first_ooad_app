@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/di/injector.dart';
@@ -10,11 +9,11 @@ import '../../../../core/markdown/markdown_parser.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/chapter_cubit.dart';
 import '../cubit/chapter_state.dart';
-import '../widgets/animated_progress_indicator.dart';
+import '../widgets/bottom_progress_bar.dart';
 import '../widgets/chapter_header.dart';
-import '../widgets/key_takeaway_card.dart';
-import '../widgets/overview_strip.dart';
-import '../widgets/section_card.dart';
+import '../widgets/content_tab.dart';
+import '../widgets/key_points_tab.dart';
+import '../widgets/overview_tab.dart';
 
 /// Reusable chapter summary screen. Pass a [chapterNumber] and the page
 /// resolves the right markdown + metadata through [ChapterCubit], which it
@@ -42,18 +41,38 @@ class _ChapterView extends StatefulWidget {
   State<_ChapterView> createState() => _ChapterViewState();
 }
 
-class _ChapterViewState extends State<_ChapterView> {
-  final ScrollController _scrollController = ScrollController();
+class _ChapterViewState extends State<_ChapterView> with SingleTickerProviderStateMixin {
+  late final TabController _tabController = TabController(length: 3, vsync: this);
+  final ScrollController _contentScrollController = ScrollController();
+  List<String>? _cachedSectionTitles;
+  Map<String, GlobalKey> _sectionKeys = {};
+
+  Map<String, GlobalKey> _sectionKeysFor(List<MdSection> sections) {
+    final titles = sections.map((s) => s.title).toList();
+    if (_cachedSectionTitles == null || !_listEquals(_cachedSectionTitles!, titles)) {
+      _cachedSectionTitles = titles;
+      _sectionKeys = {for (final title in titles) title: GlobalKey()};
+    }
+    return _sectionKeys;
+  }
+
+  bool _listEquals(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 
   @override
   void initState() {
     super.initState();
     context.read<ChapterCubit>().loadChapter(widget.chapterNumber);
-    _scrollController.addListener(_onScroll);
+    _contentScrollController.addListener(_onContentScroll);
   }
 
-  void _onScroll() {
-    final position = _scrollController.position;
+  void _onContentScroll() {
+    final position = _contentScrollController.position;
     if (position.maxScrollExtent <= 0) return;
     final progress = position.pixels / position.maxScrollExtent;
     context.read<ChapterCubit>().updateProgress(progress);
@@ -61,48 +80,21 @@ class _ChapterViewState extends State<_ChapterView> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
+    _tabController.dispose();
+    _contentScrollController.removeListener(_onContentScroll);
+    _contentScrollController.dispose();
     super.dispose();
   }
 
-  static const _overviewItems = [
-    OverviewItem(
-      icon: LucideIcons.target,
-      label: 'Customer Needs',
-      description: 'Make software do what the customer wants',
-    ),
-    OverviewItem(
-      icon: LucideIcons.puzzle,
-      label: 'OO Principles',
-      description: 'Encapsulation, delegation, flexibility',
-    ),
-    OverviewItem(
-      icon: LucideIcons.wrench,
-      label: 'Great Design',
-      description: 'Maintainable, reusable, flexible code',
-    ),
-  ];
-
-  IconData _iconForSection(String title) {
-    final lower = title.toLowerCase();
-    if (lower.contains('story') || lower.contains('guitar shop')) return LucideIcons.bookOpen;
-    if (lower.contains('overview')) return LucideIcons.map;
-    if (lower.contains('class diagram')) return LucideIcons.gitBranch;
-    if (lower.contains('step 1') || lower.contains('make it work')) return LucideIcons.hammer;
-    if (lower.contains('step 2') || lower.contains('encapsulation')) return LucideIcons.box;
-    if (lower.contains('step 3') || lower.contains('delegation') || lower.contains('reusable')) {
-      return LucideIcons.recycle;
-    }
-    if (lower.contains('3 steps')) return LucideIcons.listOrdered;
-    if (lower.contains('great software')) return LucideIcons.sparkles;
-    if (lower.contains('summary') || lower.contains('evolution')) return LucideIcons.barChart2;
-    if (lower.contains('concept')) return LucideIcons.brain;
-    if (lower.contains('mistake')) return LucideIcons.alertTriangle;
-    if (lower.contains('dumb question') || lower.contains('faq')) return LucideIcons.helpCircle;
-    if (lower.contains('terminology')) return LucideIcons.bookMarked;
-    if (lower.contains('chapter summary')) return LucideIcons.flagTriangleRight;
-    return LucideIcons.fileText;
+  void _goToSection(String title, Map<String, GlobalKey> sectionKeys) {
+    _tabController.animateTo(1);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final key = sectionKeys[title];
+      final ctx = key?.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(ctx, duration: const Duration(milliseconds: 300), curve: Curves.easeOutCubic);
+      }
+    });
   }
 
   @override
@@ -112,7 +104,7 @@ class _ChapterViewState extends State<_ChapterView> {
       body: BlocBuilder<ChapterCubit, ChapterState>(
         builder: (context, state) {
           if (state.status == ChapterStatus.loading || state.status == ChapterStatus.initial) {
-            return _LoadingSkeleton();
+            return const _LoadingSkeleton();
           }
           if (state.status == ChapterStatus.error || state.chapter == null) {
             return Center(
@@ -131,87 +123,60 @@ class _ChapterViewState extends State<_ChapterView> {
               : takeawaySection.first.blocks.whereType<MdListBlock>().expand((b) => b.items).toList();
           final contentSections =
               sections.where((s) => !s.title.toLowerCase().contains('key takeaways')).toList();
+          final sectionKeys = _sectionKeysFor(contentSections);
 
-          return Stack(
+          return Column(
             children: [
-              CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverAppBar(
-                    expandedHeight: 220,
-                    pinned: true,
-                    backgroundColor: AppColors.background,
-                    flexibleSpace: ChapterHeader(chapter: chapter),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    sliver: SliverToBoxAdapter(
-                      child: OverviewStrip(items: _overviewItems),
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                    sliver: SliverList.separated(
-                      itemCount: contentSections.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 0),
-                      itemBuilder: (context, index) {
-                        final section = contentSections[index];
-                        return SectionCard(
-                          title: section.title,
-                          icon: _iconForSection(section.title),
-                          blocks: section.blocks,
-                        )
-                            .animate(delay: Duration(milliseconds: 40 * index))
-                            .fadeIn(duration: 350.ms, curve: Curves.easeOutCubic)
-                            .slideY(begin: 0.08, end: 0, duration: 350.ms, curve: Curves.easeOutCubic);
-                      },
-                    ),
-                  ),
-                  if (takeaways.isNotEmpty)
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.xxl,
-                      ),
-                      sliver: SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: AppSpacing.md),
-                              child: Row(
-                                children: [
-                                  Icon(LucideIcons.star, color: AppColors.accent, size: 20),
-                                  SizedBox(width: AppSpacing.sm),
-                                  Text(
-                                    'Key Takeaways',
-                                    style: TextStyle(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            for (var i = 0; i < takeaways.length; i++)
-                              KeyTakeawayCard(text: takeaways[i], index: i),
-                          ],
-                        ),
-                      ),
-                    ),
+              ChapterHeader(
+                chapter: chapter,
+                readingProgress: state.readingProgress,
+                isBookmarked: state.isBookmarked,
+                onToggleBookmark: () => context.read<ChapterCubit>().toggleBookmark(),
+                onRestartChapter: () => context.read<ChapterCubit>().restartChapter(),
+              ),
+              TabBar(
+                controller: _tabController,
+                labelColor: AppColors.accent,
+                unselectedLabelColor: AppColors.textSecondary,
+                indicatorColor: AppColors.accent,
+                indicatorWeight: 2,
+                labelStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700),
+                unselectedLabelStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500),
+                tabs: const [
+                  Tab(text: 'Overview'),
+                  Tab(text: 'Content'),
+                  Tab(text: 'Key points'),
                 ],
               ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: AnimatedProgressIndicatorBar(progress: state.readingProgress),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    OverviewTab(
+                      chapter: chapter,
+                      sectionTitles: contentSections.map((s) => s.title).toList(),
+                      onSectionTap: (title) => _goToSection(title, sectionKeys),
+                    ),
+                    ContentTab(
+                      sections: contentSections,
+                      sectionKeys: sectionKeys,
+                      scrollController: _contentScrollController,
+                    ),
+                    KeyPointsTab(takeaways: takeaways),
+                  ],
+                ),
               ),
             ],
           )
               .animate()
-              .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
-              .scale(begin: const Offset(0.98, 0.98), end: const Offset(1, 1), duration: 300.ms, curve: Curves.easeOutCubic);
+              .fadeIn(duration: 250.ms, curve: Curves.easeOutCubic)
+              .slideY(begin: 0.03, end: 0, duration: 250.ms, curve: Curves.easeOutCubic);
+        },
+      ),
+      bottomNavigationBar: BlocBuilder<ChapterCubit, ChapterState>(
+        builder: (context, state) {
+          if (state.chapter == null) return const SizedBox.shrink();
+          return BottomProgressBar(chapter: state.chapter!, readingProgress: state.readingProgress);
         },
       ),
     );
@@ -219,6 +184,8 @@ class _ChapterViewState extends State<_ChapterView> {
 }
 
 class _LoadingSkeleton extends StatelessWidget {
+  const _LoadingSkeleton();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

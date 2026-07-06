@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/mamdo/AppData/Local/Pub/Cache/hosted/pub.dev/lucide_icons-0.257.0/lib/**)"
+    ]
+  }
+}

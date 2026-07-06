@@ -7,17 +7,22 @@ import '../../../../core/theme/app_theme.dart';
 class KeyTakeawayCard extends StatelessWidget {
   final String text;
   final int index;
+  final bool animate;
 
-  const KeyTakeawayCard({super.key, required this.text, required this.index});
+  const KeyTakeawayCard({
+    super.key,
+    required this.text,
+    required this.index,
+    this.animate = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+    final card = Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: AppColors.divider),
       ),
       child: Row(
@@ -26,10 +31,10 @@ class KeyTakeawayCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: AppColors.accent.withValues(alpha: 0.15),
+              color: AppColors.success.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: const Icon(LucideIcons.check, size: 14, color: AppColors.accent),
+            child: const Icon(LucideIcons.check, size: 14, color: AppColors.success),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -40,9 +45,13 @@ class KeyTakeawayCard extends StatelessWidget {
           ),
         ],
       ),
-    )
-        .animate(delay: Duration(milliseconds: 60 * index))
-        .fadeIn(duration: 400.ms, curve: Curves.easeOutCubic)
-        .slideY(begin: 0.2, end: 0, duration: 400.ms, curve: Curves.easeOutCubic);
+    );
+
+    if (!animate) return card;
+
+    return card
+        .animate(delay: Duration(milliseconds: 100 * index))
+        .fadeIn(duration: 300.ms, curve: Curves.easeOutCubic)
+        .slideY(begin: 0.2, end: 0, duration: 300.ms, curve: Curves.easeOutCubic);
   }
 }

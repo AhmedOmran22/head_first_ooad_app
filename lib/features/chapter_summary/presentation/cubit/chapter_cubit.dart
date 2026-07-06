@@ -12,20 +12,20 @@ class ChapterCubit extends Cubit<ChapterState> {
     emit(state.copyWith(status: ChapterStatus.loading));
     try {
       final chapter = await getChapter(chapterNumber);
-      final progress = await _readSavedProgress(chapterNumber);
-      emit(state.copyWith(
-        status: ChapterStatus.loaded,
-        chapter: chapter,
-        readingProgress: progress,
-      ));
+      final prefs = await SharedPreferences.getInstance();
+      final progress = prefs.getDouble(_progressKey(chapterNumber)) ?? 0;
+      final bookmarked = prefs.getBool(_bookmarkKey(chapterNumber)) ?? false;
+      emit(
+        state.copyWith(
+          status: ChapterStatus.loaded,
+          chapter: chapter,
+          readingProgress: progress,
+          isBookmarked: bookmarked,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(status: ChapterStatus.error, errorMessage: e.toString()));
     }
-  }
-
-  Future<double> _readSavedProgress(int chapterNumber) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble(_progressKey(chapterNumber)) ?? 0;
   }
 
   Future<void> updateProgress(double progress) async {
@@ -39,5 +39,23 @@ class ChapterCubit extends Cubit<ChapterState> {
     await prefs.setDouble(_progressKey(chapter.number), clamped);
   }
 
+  Future<void> restartChapter() async {
+    final chapter = state.chapter;
+    if (chapter == null) return;
+    emit(state.copyWith(readingProgress: 0));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_progressKey(chapter.number), 0);
+  }
+
+  Future<void> toggleBookmark() async {
+    final chapter = state.chapter;
+    if (chapter == null) return;
+    final next = !state.isBookmarked;
+    emit(state.copyWith(isBookmarked: next));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_bookmarkKey(chapter.number), next);
+  }
+
   String _progressKey(int chapterNumber) => 'chapter_${chapterNumber}_progress';
+  String _bookmarkKey(int chapterNumber) => 'chapter_${chapterNumber}_bookmarked';
 }

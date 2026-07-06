@@ -8,12 +8,14 @@ class ChapterState extends Equatable {
   final Chapter? chapter;
   final String? errorMessage;
   final double readingProgress;
+  final bool isBookmarked;
 
   const ChapterState({
     this.status = ChapterStatus.initial,
     this.chapter,
     this.errorMessage,
     this.readingProgress = 0,
+    this.isBookmarked = false,
   });
 
   ChapterState copyWith({
@@ -21,15 +23,18 @@ class ChapterState extends Equatable {
     Chapter? chapter,
     String? errorMessage,
     double? readingProgress,
+    bool? isBookmarked,
   }) {
     return ChapterState(
       status: status ?? this.status,
       chapter: chapter ?? this.chapter,
       errorMessage: errorMessage ?? this.errorMessage,
       readingProgress: readingProgress ?? this.readingProgress,
+      isBookmarked: isBookmarked ?? this.isBookmarked,
     );
   }
 
   @override
-  List<Object?> get props => [status, chapter, errorMessage, readingProgress];
+  List<Object?> get props =>
+      [status, chapter, errorMessage, readingProgress, isBookmarked];
 }

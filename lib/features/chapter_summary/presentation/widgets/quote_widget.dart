@@ -5,8 +5,9 @@ import '../../../../core/theme/app_theme.dart';
 
 class QuoteWidget extends StatelessWidget {
   final String text;
+  final String? label;
 
-  const QuoteWidget({super.key, required this.text});
+  const QuoteWidget({super.key, required this.text, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,10 @@ class QuoteWidget extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.accent.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(AppRadius.md),
+          bottomRight: Radius.circular(AppRadius.md),
+        ),
         border: Border(left: BorderSide(color: AppColors.accent, width: 3)),
       ),
       child: Row(
@@ -24,14 +28,31 @@ class QuoteWidget extends StatelessWidget {
           const Icon(LucideIcons.lightbulb, color: AppColors.accent, size: 20),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: InlineMarkdownText(
-              text,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 14.5,
-                height: 1.6,
-                fontStyle: FontStyle.italic,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (label != null) ...[
+                  Text(
+                    label!.toUpperCase(),
+                    style: const TextStyle(
+                      color: AppColors.accent,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+                InlineMarkdownText(
+                  text,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14.5,
+                    height: 1.6,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
