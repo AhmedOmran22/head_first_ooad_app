@@ -39,14 +39,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     await prefs.setDouble(_progressKey(chapter.number), clamped);
   }
 
-  Future<void> restartChapter() async {
-    final chapter = state.chapter;
-    if (chapter == null) return;
-    emit(state.copyWith(readingProgress: 0));
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(_progressKey(chapter.number), 0);
-  }
-
   Future<void> toggleBookmark() async {
     final chapter = state.chapter;
     if (chapter == null) return;

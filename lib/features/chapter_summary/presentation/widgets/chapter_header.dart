@@ -7,14 +7,13 @@ import '../../domain/entities/chapter.dart';
 import 'animated_progress_indicator.dart';
 
 /// Compact, informational chapter header (no big hero/parallax). Shows a
-/// back arrow, chapter counter, bookmark + menu actions, the chapter pill,
-/// title, subtitle and the reading-progress bar.
+/// back arrow, chapter counter, bookmark action, the chapter pill, title,
+/// subtitle and the reading-progress bar.
 class ChapterHeader extends StatelessWidget {
   final Chapter chapter;
   final double readingProgress;
   final bool isBookmarked;
   final VoidCallback onToggleBookmark;
-  final VoidCallback onRestartChapter;
 
   const ChapterHeader({
     super.key,
@@ -22,7 +21,6 @@ class ChapterHeader extends StatelessWidget {
     required this.readingProgress,
     required this.isBookmarked,
     required this.onToggleBookmark,
-    required this.onRestartChapter,
   });
 
   @override
@@ -53,24 +51,6 @@ class ChapterHeader extends StatelessWidget {
                     color: isBookmarked ? AppColors.accent : AppColors.textSecondary,
                   ),
                   visualDensity: VisualDensity.compact,
-                ),
-                PopupMenuButton<String>(
-                  icon: const Icon(LucideIcons.moreVertical, color: AppColors.textSecondary),
-                  color: AppColors.surfaceElevated,
-                  onSelected: (value) {
-                    if (value == 'restart') onRestartChapter();
-                    if (value == 'about') {
-                      showAboutDialog(
-                        context: context,
-                        applicationName: 'Head First OOA&D',
-                        applicationVersion: '1.0.0',
-                      );
-                    }
-                  },
-                  itemBuilder: (context) => const [
-                    PopupMenuItem(value: 'restart', child: Text('Restart chapter')),
-                    PopupMenuItem(value: 'about', child: Text('About this app')),
-                  ],
                 ),
               ],
             ),

@@ -132,7 +132,6 @@ class _ChapterViewState extends State<_ChapterView> with SingleTickerProviderSta
                 readingProgress: state.readingProgress,
                 isBookmarked: state.isBookmarked,
                 onToggleBookmark: () => context.read<ChapterCubit>().toggleBookmark(),
-                onRestartChapter: () => context.read<ChapterCubit>().restartChapter(),
               ),
               TabBar(
                 controller: _tabController,
@@ -161,6 +160,7 @@ class _ChapterViewState extends State<_ChapterView> with SingleTickerProviderSta
                       sections: contentSections,
                       sectionKeys: sectionKeys,
                       scrollController: _contentScrollController,
+                      initialProgress: state.readingProgress,
                     ),
                     KeyPointsTab(takeaways: takeaways),
                   ],
