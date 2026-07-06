@@ -7,7 +7,6 @@ import 'chapter_tab_bar.dart';
 import 'content_tab.dart';
 import 'key_points_tab.dart';
 import 'overview_tab.dart';
-import 'vertical_progress_bar.dart';
 
 /// Composes the loaded chapter view: compact header, sticky tab bar, the
 /// three tab views, and a read-only reading-progress indicator pinned to
@@ -40,9 +39,7 @@ class ChapterBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
+    return Column(
           children: [
             ChapterHeader(
               chapter: chapter,
@@ -70,15 +67,7 @@ class ChapterBody extends StatelessWidget {
               ),
             ),
           ],
-        ),
-        Positioned(
-          top: 0,
-          right: 0,
-          bottom: 0,
-          child: VerticalProgressBar(progress: readingProgress),
-        ),
-      ],
-    )
+        )
         .animate()
         .fadeIn(duration: 250.ms, curve: Curves.easeOutCubic)
         .slideY(begin: 0.03, end: 0, duration: 250.ms, curve: Curves.easeOutCubic);
