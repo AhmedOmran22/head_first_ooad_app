@@ -37,7 +37,7 @@ class BottomProgressBar extends StatelessWidget {
             const Spacer(),
             if (hasNext)
               TextButton(
-                onPressed: () => context.go('/chapters/${chapter.number + 1}'),
+                onPressed: () => context.push('/chapters/${chapter.number + 1}'),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

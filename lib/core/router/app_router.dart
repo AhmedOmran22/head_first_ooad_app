@@ -1,10 +1,15 @@
 import 'package:go_router/go_router.dart';
 
 import '../../features/chapter_summary/presentation/pages/chapter_page.dart';
+import '../../features/chapter_summary/presentation/pages/chapters_list_page.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/chapters/1',
+  initialLocation: '/',
   routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const ChaptersListPage(),
+    ),
     GoRoute(
       path: '/chapters/:chapterNumber',
       builder: (context, state) {

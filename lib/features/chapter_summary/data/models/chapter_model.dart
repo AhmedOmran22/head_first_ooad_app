@@ -71,4 +71,31 @@ const Map<int, ChapterMeta> kChapterMetadata = {
         'It\'s not enough for code to look correct. It must work correctly '
         'for the customer.',
   ),
+  2: ChapterMeta(
+    title: 'Gathering Requirements',
+    subtitle: 'Give them what they want',
+    accentColor: Color(0xFF14B8A6),
+    iconData: Icons.fact_check_rounded,
+    summary:
+        'Doug\'s Dog Doors teaches you to gather real requirements before '
+        'writing code. You\'ll turn a vague customer wish into a testable '
+        'requirements list, a use case, and finally working, tested Dart code.',
+    steps: [
+      ChapterStep(
+        title: 'Listen to the customer',
+        subtitle: 'Turn what they say into a testable requirements list',
+      ),
+      ChapterStep(
+        title: 'Write the use case',
+        subtitle: 'Capture actors, the goal, and every alternate path',
+      ),
+      ChapterStep(
+        title: 'Implement and test',
+        subtitle: 'Turn the use case into working, tested code',
+      ),
+    ],
+    coreInsight:
+        'Code that technically works isn\'t enough. You need to understand '
+        'exactly how the system will be used — including what can go wrong.',
+  ),
 };

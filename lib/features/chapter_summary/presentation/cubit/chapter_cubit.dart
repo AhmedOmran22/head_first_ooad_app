@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/chapter_progress_keys.dart';
 import '../../domain/usecases/get_chapter.dart';
 import 'chapter_state.dart';
 
@@ -13,8 +14,9 @@ class ChapterCubit extends Cubit<ChapterState> {
     try {
       final chapter = await getChapter(chapterNumber);
       final prefs = await SharedPreferences.getInstance();
-      final progress = prefs.getDouble(_progressKey(chapterNumber)) ?? 0;
-      final bookmarked = prefs.getBool(_bookmarkKey(chapterNumber)) ?? false;
+      final progress = prefs.getDouble(chapterProgressPrefsKey(chapterNumber)) ?? 0;
+      final bookmarked =
+          prefs.getBool(chapterBookmarkPrefsKey(chapterNumber)) ?? false;
       emit(
         state.copyWith(
           status: ChapterStatus.loaded,
@@ -36,7 +38,7 @@ class ChapterCubit extends Cubit<ChapterState> {
     final chapter = state.chapter;
     if (chapter == null) return;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(_progressKey(chapter.number), clamped);
+    await prefs.setDouble(chapterProgressPrefsKey(chapter.number), clamped);
   }
 
   Future<void> toggleBookmark() async {
@@ -45,9 +47,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     final next = !state.isBookmarked;
     emit(state.copyWith(isBookmarked: next));
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_bookmarkKey(chapter.number), next);
+    await prefs.setBool(chapterBookmarkPrefsKey(chapter.number), next);
   }
-
-  String _progressKey(int chapterNumber) => 'chapter_${chapterNumber}_progress';
-  String _bookmarkKey(int chapterNumber) => 'chapter_${chapterNumber}_bookmarked';
 }
