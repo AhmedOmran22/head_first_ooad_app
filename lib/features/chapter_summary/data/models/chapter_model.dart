@@ -98,4 +98,62 @@ const Map<int, ChapterMeta> kChapterMetadata = {
         'Code that technically works isn\'t enough. You need to understand '
         'exactly how the system will be used — including what can go wrong.',
   ),
+  3: ChapterMeta(
+    title: 'Requirements Change',
+    subtitle: 'I love you, you\'re perfect... now change',
+    accentColor: Color(0xFF8B5CF6),
+    iconData: Icons.change_circle_rounded,
+    summary:
+        'Todd and Gina\'s dog door works great — until they ask for automatic '
+        'bark-triggered opening. This chapter evolves the use case through '
+        'several versions and applies the first OO Design Principle: '
+        'encapsulate what varies.',
+    steps: [
+      ChapterStep(
+        title: 'Update the use case first',
+        subtitle: 'Never jump straight to code when requirements change',
+      ),
+      ChapterStep(
+        title: 'Separate main and alternate paths',
+        subtitle: 'Scenarios share a goal but take different routes',
+      ),
+      ChapterStep(
+        title: 'Encapsulate what varies',
+        subtitle: 'Move shared behavior into the class that owns it',
+      ),
+    ],
+    coreInsight:
+        'No matter how well you design an application, it will always grow '
+        'and change. If you have good use cases, you can usually change '
+        'your software quickly to adjust.',
+  ),
+  4: ChapterMeta(
+    title: 'Analysis',
+    subtitle: 'Taking your software into the real world',
+    accentColor: Color(0xFF3B82F6),
+    iconData: Icons.search_rounded,
+    summary:
+        'Holly\'s dog door now opens for every dog in the neighborhood, not '
+        'just Bruce. This chapter teaches real-world analysis and textual '
+        'analysis — reading your use case to find the nouns (classes) and '
+        'verbs (methods) your system actually needs.',
+    steps: [
+      ChapterStep(
+        title: 'Analyze for the real world',
+        subtitle: 'Find what breaks outside the happy-path scenario',
+      ),
+      ChapterStep(
+        title: 'Circle nouns and verbs',
+        subtitle: 'Textual analysis turns use cases into classes and methods',
+      ),
+      ChapterStep(
+        title: 'Delegate to shield your design',
+        subtitle: 'Isolate comparison logic so only one class ever changes',
+      ),
+    ],
+    coreInsight:
+        'The key to making sure things work is analysis: figuring out '
+        'potential problems, and solving those problems before you release '
+        'your app into the real world.',
+  ),
 };
