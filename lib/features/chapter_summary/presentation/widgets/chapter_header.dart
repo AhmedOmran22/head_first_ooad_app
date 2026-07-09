@@ -6,19 +6,13 @@ import '../../data/models/chapter_model.dart';
 import '../../domain/entities/chapter.dart';
 
 /// Compact, informational chapter header (no big hero/parallax). Shows a
-/// back arrow, chapter counter, bookmark action, the chapter pill, title
-/// and subtitle. Reading progress is shown separately by
-/// [VerticalProgressBar] pinned to the screen edge.
+/// back arrow, chapter counter, the chapter pill, title and subtitle.
 class ChapterHeader extends StatelessWidget {
   final Chapter chapter;
-  final bool isBookmarked;
-  final VoidCallback onToggleBookmark;
 
   const ChapterHeader({
     super.key,
     required this.chapter,
-    required this.isBookmarked,
-    required this.onToggleBookmark,
   });
 
   @override
@@ -40,15 +34,6 @@ class ChapterHeader extends StatelessWidget {
                 Text(
                   'Ch. ${chapter.number} of $kTotalChapterCount',
                   style: const TextStyle(color: AppColors.textSecondary, fontSize: 12.5),
-                ),
-                const Spacer(),
-                IconButton(
-                  onPressed: onToggleBookmark,
-                  icon: Icon(
-                    isBookmarked ? LucideIcons.bookMarked : LucideIcons.bookmark,
-                    color: isBookmarked ? AppColors.accent : AppColors.textSecondary,
-                  ),
-                  visualDensity: VisualDensity.compact,
                 ),
               ],
             ),

@@ -15,7 +15,6 @@ dependencies:
   lucide_icons: ^0.257.0
   equatable: ^2.1.0
   flutter_bloc: ^9.1.1
-  shared_preferences: ^2.5.5
   flutter_animate: ^4.5.2
   shimmer: ^3.0.0
 
