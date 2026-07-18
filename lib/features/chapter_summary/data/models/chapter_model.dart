@@ -156,4 +156,117 @@ const Map<int, ChapterMeta> kChapterMetadata = {
         'potential problems, and solving those problems before you release '
         'your app into the real world.',
   ),
+  5: ChapterMeta(
+    title: 'Good Design = Flexible Software',
+    subtitle: 'Nothing ever stays the same',
+    accentColor: Color(0xFFF43F5E),
+    iconData: Icons.hub_rounded,
+    summary:
+        'Rick wants to sell mandolins too — testing how flexible his guitar '
+        'search tool really is. This chapter builds an abstract class '
+        'hierarchy, then ruthlessly tears it down again in favor of a '
+        'single flexible class driven by a property map, arriving at '
+        'cohesion and loose coupling.',
+    steps: [
+      ChapterStep(
+        title: 'Test your design with change',
+        subtitle: 'Adding mandolins reveals what breaks in Rick\'s app',
+      ),
+      ChapterStep(
+        title: 'Apply the 3 OO principles',
+        subtitle: 'Interface, encapsulate what varies, single responsibility',
+      ),
+      ChapterStep(
+        title: 'Chase cohesion, not more classes',
+        subtitle: 'Flatten the hierarchy with enums and a property map',
+      ),
+    ],
+    coreInsight:
+        'Most good designs come from analysis of bad designs. Never be '
+        'afraid to make mistakes and then change things around.',
+  ),
+  6: ChapterMeta(
+    title: 'Solving Really Big Problems',
+    subtitle: 'My name is Art Vandelay... I am an architect',
+    accentColor: Color(0xFF6366F1),
+    iconData: Icons.account_tree_rounded,
+    summary:
+        'Gary wants a reusable Game System Framework, and the scale is '
+        'overwhelming. This chapter shows that big problems are just lots '
+        'of small ones — solved with feature lists, use case diagrams, and '
+        'domain analysis to break the system into manageable modules.',
+    steps: [
+      ChapterStep(
+        title: 'Find commonality and variability',
+        subtitle: 'Learn what the system is like and not like',
+      ),
+      ChapterStep(
+        title: 'Turn conversations into a feature list',
+        subtitle: 'Validate it against a use case diagram',
+      ),
+      ChapterStep(
+        title: 'Break it into modules',
+        subtitle: 'Divide and conquer, then let patterns like MVC emerge',
+      ),
+    ],
+    coreInsight:
+        'You solve big problems the same way you solve small problems.',
+  ),
+  7: ChapterMeta(
+    title: 'Architecture',
+    subtitle: 'Bringing order to chaos',
+    accentColor: Color(0xFF10B981),
+    iconData: Icons.architecture_rounded,
+    summary:
+        'With modules and an MVC pattern in place, Gary\'s framework still '
+        'feels like chaos. This chapter introduces the 3 Qs of architecture '
+        'to find what matters most, then builds the Board, Tile, and Unit '
+        'classes to reduce project risk first.',
+    steps: [
+      ChapterStep(
+        title: 'Ask the 3 Qs',
+        subtitle: 'Essence, meaning, and difficulty flag what matters most',
+      ),
+      ChapterStep(
+        title: 'Reduce risk first',
+        subtitle: 'Build the hardest, most uncertain features early',
+      ),
+      ChapterStep(
+        title: 'Validate with scenarios',
+        subtitle: 'A quick informal walkthrough catches missing requirements',
+      ),
+    ],
+    coreInsight:
+        'The problem isn\'t which feature to start with — the problem is '
+        'risk. Focus on reducing risk, not on the order you tackle things in.',
+  ),
+  8: ChapterMeta(
+    title: 'Design Principles',
+    subtitle: 'Originality is overrated',
+    accentColor: Color(0xFF06B6D4),
+    iconData: Icons.rule_rounded,
+    summary:
+        'No new customer this chapter — just the design principles behind '
+        'everything you\'ve already built. Meet OCP, DRY, SRP, and LSP, and '
+        'learn when delegation, composition, or aggregation beats '
+        'inheritance.',
+    steps: [
+      ChapterStep(
+        title: 'Extend, don\'t modify',
+        subtitle: 'The Open-Closed Principle keeps working code working',
+      ),
+      ChapterStep(
+        title: 'One place, one responsibility',
+        subtitle: 'DRY and SRP eliminate duplication and confusion',
+      ),
+      ChapterStep(
+        title: 'Choose the right reuse tool',
+        subtitle: 'Delegation, composition, or aggregation over broken inheritance',
+      ),
+    ],
+    coreInsight:
+        'If you favor delegation, composition, and aggregation over '
+        'inheritance, your software will usually be more flexible, and '
+        'easier to maintain, extend, and reuse.',
+  ),
 };

@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/Users/mamdo/AppData/Local/Pub/Cache/hosted/pub.dev/lucide_icons-0.257.0/lib/**)"
+      "Read(//c/Users/mamdo/AppData/Local/Pub/Cache/hosted/pub.dev/lucide_icons-0.257.0/lib/**)",
+      "Bash(grep -n \"^---$\" /tmp/p2_clean.md | tail -6)",
+      "Read(//tmp/**)",
+      "Bash(sed -n '660,682p' /tmp/p2_clean.md | cat -n; echo \"...\"; sed -n '733,753p' /tmp/p2_clean.md | cat -n)"
     ]
   }
 }
