@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="head_first_ooad"
+        android:label="Head First OOA&amp;D"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
