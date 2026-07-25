@@ -269,4 +269,61 @@ const Map<int, ChapterMeta> kChapterMetadata = {
         'inheritance, your software will usually be more flexible, and '
         'easier to maintain, extend, and reuse.',
   ),
+  9: ChapterMeta(
+    title: 'Iterating and Testing',
+    subtitle: 'The software is still for the customer',
+    accentColor: Color(0xFF84CC16),
+    iconData: Icons.science_rounded,
+    summary:
+        'Gary is losing patience — he wants to see running code, not more '
+        'diagrams. This chapter completes the Unit class with tests written '
+        'first, weighs commonality against encapsulation, and settles '
+        'programming by contract vs. defensive programming.',
+    steps: [
+      ChapterStep(
+        title: 'Write tests before code',
+        subtitle: 'Test scenarios define behavior before implementation biases you',
+      ),
+      ChapterStep(
+        title: 'Weigh commonality vs. encapsulation',
+        subtitle: 'Every property tradeoff has pros and cons',
+      ),
+      ChapterStep(
+        title: 'Pick a contract',
+        subtitle: 'Programming by contract or defensive, driven by your customer',
+      ),
+    ],
+    coreInsight:
+        'Good software is built iteratively. Analyze, design, and then '
+        'iterate again, working on smaller and smaller parts of your app.',
+  ),
+  10: ChapterMeta(
+    title: 'The OOA&D Lifecycle',
+    subtitle: 'Putting it all together',
+    accentColor: Color(0xFFD946EF),
+    iconData: Icons.route_rounded,
+    summary:
+        'Every tool from the book comes together into one repeatable '
+        'lifecycle, proven by building the Objectville Travel RouteFinder '
+        'from scratch — a subway routing app taken from vision statement to '
+        'shipped, tested code.',
+    steps: [
+      ChapterStep(
+        title: 'Run the full lifecycle',
+        subtitle: 'Feature list through delivery, one iteration at a time',
+      ),
+      ChapterStep(
+        title: 'Let usage drive design',
+        subtitle: 'Skip a Line class because connections already carry it',
+      ),
+      ChapterStep(
+        title: 'Reuse what\'s already solved',
+        subtitle: 'Dijkstra\'s algorithm didn\'t need reinventing',
+      ),
+    ],
+    coreInsight:
+        'OOA&D is about having lots of options. There is never one right '
+        'way to solve a problem, so the more options you have, the better '
+        'chance you\'ll find a good solution to every problem.',
+  ),
 };
