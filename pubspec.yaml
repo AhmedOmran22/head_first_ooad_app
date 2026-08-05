@@ -1,7 +1,9 @@
 name: head_first_ooad
-description: "A new Flutter project."
+description: "A Flutter app that presents structured, navigable chapter summaries for the book Head First Object-Oriented Analysis and Design."
 publish_to: 'none'
 version: 1.0.0+1
+homepage: https://github.com/AhmedOmran22/head_first_ooad_app
+repository: https://github.com/AhmedOmran22/head_first_ooad_app
 
 environment:
   sdk: ^3.11.1
